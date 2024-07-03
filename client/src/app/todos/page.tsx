@@ -1,39 +1,30 @@
-import { Await, defer, useLoaderData } from "react-router-dom"
-import { getTodos } from "../api/todos"
-import { TodoItem } from "../components/TodoItem"
-import { Suspense } from "react"
-import { Skeleton, SkeletonList } from "../components/Skeleton"
+import { getTodos } from '@/api/todos'
+import { TodoItem } from '@/components/TodoItem'
+import { Suspense } from 'react'
+import { Skeleton, SkeletonList } from '@/components/Skeleton'
 
-function TodoList() {
-  const { todosPromise } = useLoaderData()
-
-  return (
-    <>
-      <h1 className="page-title">Todos</h1>
-      <ul>
-        <Suspense
-          fallback={
-            <SkeletonList amount={10}>
-              <li>
-                <Skeleton short />
-              </li>
-            </SkeletonList>
-          }
-        >
-          <Await resolve={todosPromise}>
-            {todos => todos.map(todo => <TodoItem key={todo.id} {...todo} />)}
-          </Await>
-        </Suspense>
-      </ul>
-    </>
-  )
+export default function TodoList() {
+	return (
+		<>
+			<h1 className='page-title'>Todos</h1>
+			<ul>
+				<Suspense
+					fallback={
+						<SkeletonList amount={10}>
+							<li>
+								<Skeleton short />
+							</li>
+						</SkeletonList>
+					}>
+					<TodosList />
+				</Suspense>
+			</ul>
+		</>
+	)
 }
 
-function loader({ request: { signal } }) {
-  return defer({ todosPromise: getTodos({ signal }) })
-}
+async function TodosList() {
+	const todos = await getTodos()
 
-export const todoListRoute = {
-  loader,
-  element: <TodoList />,
+	return todos.map(todo => <TodoItem key={todo.id} {...todo} />)
 }
