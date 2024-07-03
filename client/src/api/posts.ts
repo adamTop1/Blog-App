@@ -16,3 +16,9 @@ export function getPost(postId: string | number) {
 		.then(res => res.json())
 		.then(data => data as Post)
 }
+
+export async function getUserPosts(userId: string | number) {
+	return fetch(`${process.env.API_URL}/posts?userId=${userId}`)
+	  .then(res => res.json())
+	  .then(data => data as Post[])
+  }

@@ -40,10 +40,3 @@ export function SkeletonList({ amount, children }: SkeletonListProps) {
     </>
   )
 }
-// export function SimpleSkeletonText({ resolve, children }) {
-//   return (
-//     <Suspense fallback={<Skeleton short inline />}>
-//       <Await resolve={resolve}>{children}</Await>
-//     </Suspense>
-//   )
-// }
