@@ -1,7 +1,17 @@
 import { Fragment, Suspense } from "react"
-import { Await } from "react-router-dom"
 
-export function Skeleton({ short, inline }) {
+
+interface SkeletonProps {
+  short?: boolean
+  inline?: boolean
+}
+
+interface SkeletonListProps {
+  amount: number
+  children: React.ReactNode
+}
+
+export function Skeleton({ short, inline }: SkeletonProps) {
   return (
     <div
       className="skeleton"
@@ -21,7 +31,7 @@ export function SkeletonInput() {
   return <div className="skeleton skeleton-input" />
 }
 
-export function SkeletonList({ amount, children }) {
+export function SkeletonList({ amount, children }: SkeletonListProps) {
   return (
     <>
       {Array.from({ length: amount }).map((_, i) => (
@@ -30,10 +40,10 @@ export function SkeletonList({ amount, children }) {
     </>
   )
 }
-export function SimpleSkeletonText({ resolve, children }) {
-  return (
-    <Suspense fallback={<Skeleton short inline />}>
-      <Await resolve={resolve}>{children}</Await>
-    </Suspense>
-  )
-}
+// export function SimpleSkeletonText({ resolve, children }) {
+//   return (
+//     <Suspense fallback={<Skeleton short inline />}>
+//       <Await resolve={resolve}>{children}</Await>
+//     </Suspense>
+//   )
+// }

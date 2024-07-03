@@ -1,7 +1,13 @@
-import { Link } from "react-router-dom"
+import Link from "next/link"
 import { Skeleton, SkeletonButton } from "./Skeleton"
 
-export function PostCard({ id, title, body }) {
+interface PostCardProps {
+  id: number
+  title: string
+  body: string
+}
+
+export function PostCard({ id, title, body }: PostCardProps) {
   return (
     <div className="card">
       <div className="card-header">{title}</div>
@@ -9,7 +15,7 @@ export function PostCard({ id, title, body }) {
         <div className="card-preview-text">{body}</div>
       </div>
       <div className="card-footer">
-        <Link className="btn" to={`/posts/${id}`}>
+        <Link className="btn" href={`/posts/${id}`}>
           View
         </Link>
       </div>

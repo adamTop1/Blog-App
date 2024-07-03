@@ -1,45 +1,32 @@
-import { Await, Link, defer, useLoaderData } from "react-router-dom"
-import { getComments } from "../api/comments"
-import { getPost } from "../api/posts"
-import { getUser } from "../api/users"
-import {
-  SimpleSkeletonText,
-  Skeleton,
-  SkeletonList,
-} from "../components/Skeleton"
-import { Suspense } from "react"
+import Link from 'next/link'
+import { getComments } from '@/api/comments'
+import { getPost } from '@/api/posts'
+import { getUser } from '@/api/users'
+import { Skeleton, SkeletonList } from '@/components/Skeleton'
+import { Suspense } from 'react'
 
-function Post() {
-  const { commentsPromise, postPromise, userPromise } = useLoaderData()
-
-  return (
+export default async function Post({ params: { postId } }: { params: { postId: string } }) {
+	 return (
     <>
-      <h1 className="page-title">
-        <SimpleSkeletonText resolve={postPromise}>
-          {post => post.title}
-        </SimpleSkeletonText>
-      </h1>
-      <span className="page-subtitle">
-        By:{" "}
-        <Suspense fallback={<Skeleton short inline />}>
-          <Await resolve={userPromise}>
-            {user => <Link to={`/users/${user.id}`}>{user.name}</Link>}
-          </Await>
-        </Suspense>
-      </span>
-      <div>
-        <Suspense
-          fallback={
-            <>
+      <Suspense
+        fallback={
+          <>
+            <h1 className="page-title">
+              <Skeleton inline short />
+            </h1>
+            <span className="page-subtitle">
+              By: <Skeleton short inline />
+            </span>
+            <div>
               <Skeleton />
               <Skeleton />
               <Skeleton />
-            </>
-          }
-        >
-          <Await resolve={postPromise}>{post => post.body}</Await>
-        </Suspense>
-      </div>
+            </div>
+          </>
+        }
+      >
+        <PostDetails postId={postId} />
+      </Suspense>
 
       <h3 className="mt-4 mb-2">Comments</h3>
       <div className="card-stack">
@@ -58,36 +45,46 @@ function Post() {
             </SkeletonList>
           }
         >
-          <Await resolve={commentsPromise}>
-            {comments =>
-              comments.map(comment => (
-                <div key={comment.id} className="card">
-                  <div className="card-body">
-                    <div className="mb-1 text-sm">{comment.email}</div>
-                    {comment.body}
-                  </div>
-                </div>
-              ))
-            }
-          </Await>
+          <Comments postId={postId} />
         </Suspense>
       </div>
     </>
   )
 }
 
-function loader({ request: { signal }, params: { postId } }) {
-  const comments = getComments(postId, { signal })
-  const post = getPost(postId, { signal })
 
-  return defer({
-    commentsPromise: comments,
-    postPromise: post,
-    userPromise: post.then(post => getUser(post.userId, { signal })),
-  })
+async function PostDetails({ postId }: { postId: string }) {
+  const post = await getPost(postId)
+
+  return (
+    <>
+      <h1 className="page-title">{post.title}</h1>
+      <span className="page-subtitle">
+        By:{" "}
+        <Suspense fallback={<Skeleton short inline />}>
+          <UserDetails userId={post.userId} />
+        </Suspense>
+      </span>
+      <div>{post.body}</div>
+    </>
+  )
 }
 
-export const postRoute = {
-  loader,
-  element: <Post />,
+async function UserDetails({ userId }: { userId: number }) {
+  const user = await getUser(userId)
+
+  return <Link href={`/users/${user.id}`}>{user.name}</Link>
+}
+
+async function Comments({ postId }: { postId: string }) {
+  const comments = await getComments(postId)
+
+  return comments.map(comment => (
+    <div key={comment.id} className="card">
+      <div className="card-body">
+        <div className="mb-1 text-sm">{comment.email}</div>
+        {comment.body}
+      </div>
+    </div>
+  ))
 }
