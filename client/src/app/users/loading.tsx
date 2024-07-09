@@ -1,24 +1,26 @@
-import { SkeletonList, Skeleton, SkeletonButton } from '@/components/Skeleton'
-import React from 'react'
+import { Skeleton, SkeletonButton, SkeletonList } from "@/components/Skeleton"
 
-const LoadingUsersPage = () => {
-	return (
-		<SkeletonList amount={6}>
-			<div className='card'>
-				<div className='card-header'>
-					<Skeleton short />
-				</div>
-				<div className='card-body'>
-					<Skeleton short />
-					<Skeleton short />
-					<Skeleton short />
-				</div>
-				<div className='card-footer'>
-					<SkeletonButton />
-				</div>
-			</div>
-		</SkeletonList>
-	)
+export default function LoadingUsersPage() {
+  return (
+    <>
+      <h1 className="page-title">Users</h1>
+      <div className="card-grid">
+        <SkeletonList amount={6}>
+          <div className="card">
+            <div className="card-header">
+              <Skeleton short />
+            </div>
+            <div className="card-body">
+              <Skeleton short />
+              <Skeleton short />
+              <Skeleton short />
+            </div>
+            <div className="card-footer">
+              <SkeletonButton />
+            </div>
+          </div>
+        </SkeletonList>
+      </div>
+    </>
+  )
 }
-
-export default LoadingUsersPage

@@ -1,13 +1,15 @@
 import Link from "next/link"
 import { Skeleton, SkeletonButton } from "./Skeleton"
 
-interface PostCardProps {
+export function PostCard({
+  id,
+  title,
+  body,
+}: {
   id: number
   title: string
   body: string
-}
-
-export function PostCard({ id, title, body }: PostCardProps) {
+}) {
   return (
     <div className="card">
       <div className="card-header">{title}</div>

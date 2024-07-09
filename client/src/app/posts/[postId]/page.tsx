@@ -1,12 +1,16 @@
-import Link from 'next/link'
-import { getComments } from '@/api/comments'
-import { getPost } from '@/api/posts'
-import { getUser } from '@/api/users'
-import { Skeleton, SkeletonList } from '@/components/Skeleton'
-import { Suspense } from 'react'
+import { getPostComments } from "@/api/comments"
+import { getPost } from "@/api/posts"
+import { getUser } from "@/api/users"
+import { Skeleton, SkeletonList } from "@/components/Skeleton"
+import Link from "next/link"
+import { Suspense } from "react"
 
-export default async function Post({ params: { postId } }: { params: { postId: string } }) {
-	 return (
+export default function PostPage({
+  params: { postId },
+}: {
+  params: { postId: string }
+}) {
+  return (
     <>
       <Suspense
         fallback={
@@ -35,7 +39,7 @@ export default async function Post({ params: { postId } }: { params: { postId: s
             <SkeletonList amount={5}>
               <div className="card">
                 <div className="card-body">
-                  <div className="mb-1 text-sm">
+                  <div className="text-sm mb-1">
                     <Skeleton short />
                   </div>
                   <Skeleton />
@@ -51,7 +55,6 @@ export default async function Post({ params: { postId } }: { params: { postId: s
     </>
   )
 }
-
 
 async function PostDetails({ postId }: { postId: string }) {
   const post = await getPost(postId)
@@ -77,12 +80,12 @@ async function UserDetails({ userId }: { userId: number }) {
 }
 
 async function Comments({ postId }: { postId: string }) {
-  const comments = await getComments(postId)
+  const comments = await getPostComments(postId)
 
   return comments.map(comment => (
     <div key={comment.id} className="card">
       <div className="card-body">
-        <div className="mb-1 text-sm">{comment.email}</div>
+        <div className="text-sm mb-1">{comment.email}</div>
         {comment.body}
       </div>
     </div>

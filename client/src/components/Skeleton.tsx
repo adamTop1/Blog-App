@@ -1,17 +1,12 @@
-import { Fragment, Suspense } from "react"
+import { Fragment, ReactNode, Suspense } from "react"
 
-
-interface SkeletonProps {
+export function Skeleton({
+  short,
+  inline,
+}: {
   short?: boolean
   inline?: boolean
-}
-
-interface SkeletonListProps {
-  amount: number
-  children: React.ReactNode
-}
-
-export function Skeleton({ short, inline }: SkeletonProps) {
+}) {
   return (
     <div
       className="skeleton"
@@ -31,7 +26,13 @@ export function SkeletonInput() {
   return <div className="skeleton skeleton-input" />
 }
 
-export function SkeletonList({ amount, children }: SkeletonListProps) {
+export function SkeletonList({
+  amount,
+  children,
+}: {
+  amount: number
+  children: ReactNode
+}) {
   return (
     <>
       {Array.from({ length: amount }).map((_, i) => (
