@@ -1,5 +1,5 @@
-import { getPosts } from "@/api/posts"
-import { getUsers } from "@/api/users"
+import { getPosts } from "@/db/posts"
+import { getUsers } from "@/db/users"
 import { FormGroup } from "@/components/FormGroup"
 import { PostCard, SkeletonPostCard } from "@/components/PostCard"
 import { SkeletonList } from "@/components/Skeleton"
@@ -35,7 +35,7 @@ async function PostGrid() {
 
 function SearchForm() {
   return (
-    <form className="form mb-4">
+    <form className="mb-4 form">
       <div className="form-row">
         <FormGroup>
           <label htmlFor="query">Query</label>
