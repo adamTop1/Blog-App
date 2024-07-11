@@ -33,7 +33,7 @@ function SearchForm({userOptions}: {userOptions: ReactNode}) {
 				<FormGroup>
 					<label htmlFor='userId'>Author</label>
 					<select name='userId' id='userId' defaultValue={userId} ref={userRef}>
-						<Suspense key={`${userId}`} fallback={<option value=''>Loading...</option>}>
+						<Suspense key={`${userId}-${query}`} fallback={<option value=''>Loading...</option>}>
                             {userOptions}
                         </Suspense>
 					</select>

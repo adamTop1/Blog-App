@@ -1,6 +1,5 @@
 import { getPosts } from '@/db/posts'
 import { getUsers } from '@/db/users'
-import { FormGroup } from '@/components/FormGroup'
 import { PostCard, SkeletonPostCard } from '@/components/PostCard'
 import { SkeletonList } from '@/components/Skeleton'
 import { Suspense } from 'react'

@@ -1,12 +1,16 @@
-import prisma from "./db"
+import { unstable_cache } from 'next/cache'
+import { cache } from 'react'
+import prisma from './db'
 
-export async function getPostComments(postId: string | number) {
-  await wait(2000)
-  return prisma.comment.findMany({ where: { postId: Number(postId) } })
-}
+export const getPostComments = unstable_cache(
+	cache(async (postId: string | number) => {
+		await wait(2000)
+		return prisma.comment.findMany({ where: { postId: Number(postId) } })
+	}), ['comments', 'postId']
+)
 
 function wait(duration: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, duration)
-  })
+	return new Promise(resolve => {
+		setTimeout(resolve, duration)
+	})
 }
