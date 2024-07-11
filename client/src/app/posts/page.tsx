@@ -1,71 +1,54 @@
-import { getPosts } from "@/db/posts"
-import { getUsers } from "@/db/users"
-import { FormGroup } from "@/components/FormGroup"
-import { PostCard, SkeletonPostCard } from "@/components/PostCard"
-import { SkeletonList } from "@/components/Skeleton"
-import { Suspense } from "react"
+import { getPosts } from '@/db/posts'
+import { getUsers } from '@/db/users'
+import { FormGroup } from '@/components/FormGroup'
+import { PostCard, SkeletonPostCard } from '@/components/PostCard'
+import { SkeletonList } from '@/components/Skeleton'
+import { Suspense } from 'react'
+import SearchForm from './searchForm'
 
-export default function PostsPage() {
-  return (
-    <>
-      <h1 className="page-title">Posts</h1>
-
-      <SearchForm />
-
-      <div className="card-grid">
-        <Suspense
-          fallback={
-            <SkeletonList amount={6}>
-              <SkeletonPostCard />
-            </SkeletonList>
-          }
-        >
-          <PostGrid />
-        </Suspense>
-      </div>
-    </>
-  )
+type PageProps = {
+	searchParams: { query?: string; userId?: string }
 }
 
-async function PostGrid() {
-  const posts = await getPosts()
+export default function PostsPage({ searchParams: { userId = '', query = '' } }: PageProps) {
+	return (
+		<>
+			<h1 className='page-title'>Posts</h1>
 
-  return posts.map(post => <PostCard key={post.id} {...post} />)
+			<SearchForm userOptions={<UserSelect />} />
+
+			<div className='card-grid'>
+				<Suspense
+				key={`${userId}-${query}`}
+					fallback={
+						<SkeletonList amount={6}>
+							<SkeletonPostCard />
+						</SkeletonList>
+					}>
+					<PostGrid userId={userId} query={query} />
+				</Suspense>
+			</div>
+		</>
+	)
 }
 
-function SearchForm() {
-  return (
-    <form className="mb-4 form">
-      <div className="form-row">
-        <FormGroup>
-          <label htmlFor="query">Query</label>
-          <input type="search" name="query" id="query" />
-        </FormGroup>
-        <FormGroup>
-          <label htmlFor="userId">Author</label>
-          <select name="userId" id="userId">
-            <Suspense fallback={<option value="">Loading...</option>}>
-              <UserSelect />
-            </Suspense>
-          </select>
-        </FormGroup>
-        <button className="btn">Filter</button>
-      </div>
-    </form>
-  )
+async function PostGrid({ userId, query }: { userId: string; query: string }) {
+	const posts = await getPosts({ query, userId })
+
+	return posts.map(post => <PostCard key={post.id} {...post} />)
 }
 
 async function UserSelect() {
-  const users = await getUsers()
+	const users = await getUsers()
 
-  return (
-    <>
-      <option value="">Any</option>
-      {users.map(user => (
-        <option key={user.id} value={user.id}>
-          {user.name}
-        </option>
-      ))}
-    </>
-  )
+	return (
+		<>
+			<option value=''>Any</option>
+			{users.map(user => (
+				<option key={user.id} value={user.id}>
+					{user.name}
+				</option>
+			))}
+		</>
+	)
 }
