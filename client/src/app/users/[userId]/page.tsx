@@ -69,9 +69,9 @@ export default function UserPage({
 }
 
 async function UserDetails({ userId }: { userId: string }) {
-  const user = await getUser(userId) 
+  const user = await getUser(userId)
 
-  if (!user) return notFound()
+  if (user == null) return notFound()
 
   return (
     <>
