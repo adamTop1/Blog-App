@@ -19,7 +19,7 @@ export function PostForm({ post, userSelectOptions }: PostFormProps) {
 	return (
 		<form className='form' action={formAction}>
 			<div className='form-row'>
-				<FormGroup errorMessage='Placeholder Error Message'>
+				<FormGroup >
 					<label htmlFor='title'>Title</label>
 					<input type='text' name='title' id='title' defaultValue={post?.title} />
 				</FormGroup>

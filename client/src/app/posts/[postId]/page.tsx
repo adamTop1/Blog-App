@@ -61,8 +61,12 @@ async function PostDetails({ postId }: { postId: string }) {
 		<>
 			<h1 className='page-title'>
 				{post.title}
-				<Link href={`/posts/${postId}/edit`}>Edit</Link>
-				<DeleteButtonAction postId={postId} />
+				<div className='form-row form-btn-row'>
+					<Link className='btn btn-outline' href={`/posts/${postId}/edit`}>
+						Edit
+					</Link>
+					<DeleteButtonAction postId={postId} />
+				</div>
 			</h1>
 			<span className='page-subtitle'>
 				By:{' '}

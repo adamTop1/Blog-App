@@ -30,7 +30,10 @@ export const updatePostAction = async (postId: number, prevState: unknown, formD
 }
 
 export const deletePostAction = async (postId: string) => {
-	await deletePost(postId)
+	const post = await deletePost(postId)
+
+	revalidatePath(`/users/${post.userId}`)
+	revalidatePath(`/posts/${post.id}`)
 	revalidatePath('/posts')
 	redirect('/posts')
 }
