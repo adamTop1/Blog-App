@@ -19,7 +19,7 @@ export function PostForm({ post, userSelectOptions }: PostFormProps) {
 	return (
 		<form className='form' action={formAction}>
 			<div className='form-row'>
-				<FormGroup >
+				<FormGroup>
 					<label htmlFor='title'>Title</label>
 					<input type='text' name='title' id='title' defaultValue={post?.title} />
 				</FormGroup>
@@ -37,7 +37,7 @@ export function PostForm({ post, userSelectOptions }: PostFormProps) {
 				</FormGroup>
 			</div>
 			<div className='form-row form-btn-row'>
-				<Link className='btn btn-outline' href='/posts'>
+				<Link className='btn btn-outline' href={post ? `/posts/${post.id}` : '/posts'}>
 					Cancel
 				</Link>
 				<button className='btn'>Save</button>
