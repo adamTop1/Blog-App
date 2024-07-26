@@ -77,7 +77,8 @@ export function updatePost(
 	})
 }
 
-export function deletePost(postId: string | number) {
+export async function deletePost(postId: string | number) {
+	await wait(2000)
 	return prisma.post.delete({ where: { id: Number(postId) } })
 }
 

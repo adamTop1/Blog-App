@@ -16,21 +16,21 @@ export const createPostAction = async (prevState: unknown, formData: FormData) =
 	redirect(`/posts/${post.id}`)
 }
 
-export const updatePostAction = async (postId: number, prevState: unknown, formData: FormData ) => {
+export const updatePostAction = async (postId: number, prevState: unknown, formData: FormData) => {
 	const title = formData.get('title') as string
 	const body = formData.get('body') as string
 	const userId = Number(formData.get('userId'))
 
 	const post = await updatePost(postId, { title, body, userId })
 
-    revalidatePath("/posts")
-    revalidatePath(`/posts/${post.id}`)
-    revalidatePath(`/users/${post.userId}`)
-    redirect(`/posts/${post.id}`)
+	revalidatePath('/posts')
+	revalidatePath(`/posts/${post.id}`)
+	revalidatePath(`/users/${post.userId}`)
+	redirect(`/posts/${post.id}`)
 }
 
 export const deletePostAction = async (postId: string) => {
 	await deletePost(postId)
-	revalidatePath("/posts")
-	redirect("/posts")
+	revalidatePath('/posts')
+	redirect('/posts')
 }
