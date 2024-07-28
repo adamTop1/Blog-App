@@ -19,11 +19,11 @@ export function PostForm({ post, userSelectOptions }: PostFormProps) {
 	return (
 		<form className='form' action={formAction}>
 			<div className='form-row'>
-				<FormGroup>
+				<FormGroup errorMessage={errors.title} >
 					<label htmlFor='title'>Title</label>
 					<input type='text' name='title' id='title' defaultValue={post?.title} required/>
 				</FormGroup>
-				<FormGroup>
+				<FormGroup errorMessage={errors.userId}>
 					<label htmlFor='userId'>Author</label>
 					<select name='userId' id='userId' required>
 						<Suspense fallback={<option value=''>Loading...</option>}>{userSelectOptions}</Suspense>
@@ -31,7 +31,7 @@ export function PostForm({ post, userSelectOptions }: PostFormProps) {
 				</FormGroup>
 			</div>
 			<div className='form-row'>
-				<FormGroup>
+				<FormGroup errorMessage={errors.body}>
 					<label htmlFor='body'>Body</label>
 					<textarea name='body' id='body' defaultValue={post?.body} required />
 				</FormGroup>
