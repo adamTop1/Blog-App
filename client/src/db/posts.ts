@@ -45,7 +45,8 @@ export const getUserPosts = unstable_cache(
 	['posts', 'userId']
 )
 
-export function createPost({ title, body, userId }: { title: string; body: string; userId: number }) {
+export async function createPost({ title, body, userId }: { title: string; body: string; userId: number }) {
+	await wait(2000)
 	return prisma.post.create({
 		data: {
 			title,
@@ -55,7 +56,7 @@ export function createPost({ title, body, userId }: { title: string; body: strin
 	})
 }
 
-export function updatePost(
+export async function updatePost(
 	postId: string | number,
 	{
 		title,
@@ -67,6 +68,7 @@ export function updatePost(
 		userId: number
 	}
 ) {
+	await wait(2000)
 	return prisma.post.update({
 		where: { id: Number(postId) },
 		data: {

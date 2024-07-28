@@ -1,20 +1,22 @@
-import { getUsers } from "@/db/users"
+import { getUsers } from '@/db/users'
 
 export async function UserSelectOptions({
-  withAnyOption = false,
+	withAnyOption = false,
+	users,
 }: {
-  withAnyOption?: boolean
+	withAnyOption?: boolean
+	users?: Awaited<ReturnType<typeof getUsers>>
 }) {
-  const users = await getUsers()
+	if (users == null) users = await getUsers()
 
-  return (
-    <>
-      {withAnyOption && <option value="">Any</option>}
-      {users.map(user => (
-        <option key={user.id} value={user.id}>
-          {user.name}
-        </option>
-      ))}
-    </>
-  )
+	return (
+		<>
+			{withAnyOption && <option value=''>Any</option>}
+			{users.map(user => (
+				<option key={user.id} value={user.id}>
+					{user.name}
+				</option>
+			))}
+		</>
+	)
 }

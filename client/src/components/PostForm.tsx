@@ -5,7 +5,7 @@ import { Suspense } from 'react'
 import Link from 'next/link'
 import { SkeletonInput } from './Skeleton'
 import { createPostAction, updatePostAction } from '@/actions/posts'
-import { useFormState } from 'react-dom'
+import { useFormState, useFormStatus } from 'react-dom'
 
 interface PostFormProps {
 	post?: { id: number; title: string; body: string; userId: number }
@@ -40,10 +40,15 @@ export function PostForm({ post, userSelectOptions }: PostFormProps) {
 				<Link className='btn btn-outline' href={post ? `/posts/${post.id}` : '/posts'}>
 					Cancel
 				</Link>
-				<button className='btn'>Save</button>
+				<SubmitButton />
 			</div>
 		</form>
 	)
+}
+
+const SubmitButton = () => {
+	const { pending } = useFormStatus()
+	return <button className='btn' disabled={pending}>{pending ? 'Saving' : 'Save'}</button>
 }
 
 export function SkeletonPostForm() {
