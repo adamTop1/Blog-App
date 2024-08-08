@@ -1,8 +1,8 @@
 import { TodoItem } from "@/components/TodoItem"
+import { getTodos } from "@/db/todos"
+import { GetStaticProps, InferGetStaticPropsType } from "next"
 
-export default function TodosPage() {
-  const todos: any[] = []
-
+export default function TodosPage({ todos }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       <h1 className="page-title">Todos</h1>
@@ -14,3 +14,9 @@ export default function TodosPage() {
     </>
   )
 }
+
+export const getStaticProps = (async () => {
+ const todos = await getTodos()
+
+  return { props: { todos } }
+}) satisfies GetStaticProps
