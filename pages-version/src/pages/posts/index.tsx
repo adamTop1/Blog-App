@@ -1,10 +1,12 @@
 import { FormGroup } from "@/components/FormGroup"
 import { PostCard } from "@/components/PostCard"
+import { getPosts } from "@/db/posts"
+import { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Link from "next/link"
 import { useRef } from "react"
 
-export default function PostsPage() {
-  const posts: any[] = []
+export default function PostsPage({posts}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+
 
   return (
     <>
@@ -37,7 +39,7 @@ function SearchForm() {
   const users: any[] = []
 
   return (
-    <form className="form mb-4">
+    <form className="mb-4 form">
       <div className="form-row">
         <FormGroup>
           <label htmlFor="query">Query</label>
@@ -65,3 +67,9 @@ function SearchForm() {
     </form>
   )
 }
+
+export const getServerSideProps = (async () => {
+  const posts = await getPosts()
+
+  return { props: { posts } }
+}) satisfies GetServerSideProps
