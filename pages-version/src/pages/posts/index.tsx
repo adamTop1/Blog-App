@@ -1,13 +1,18 @@
 import { FormGroup } from "@/components/FormGroup"
 import { PostCard } from "@/components/PostCard"
 import { getPosts } from "@/db/posts"
+import { getUsers } from "@/db/users"
 import { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Link from "next/link"
-import { useRef } from "react"
+import { useRouter } from "next/router"
+import { FormEvent, useRef, useState } from "react"
 
-export default function PostsPage({posts}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-
-
+export default function PostsPage({
+  posts,
+  users,
+  query,
+  userId,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <h1 className="page-title">
@@ -19,7 +24,7 @@ export default function PostsPage({posts}: InferGetServerSidePropsType<typeof ge
         </div>
       </h1>
 
-      <SearchForm />
+      <SearchForm users={users} query={query} userId={userId} />
 
       <div className="card-grid">
         {posts.map(post => (
@@ -30,16 +35,39 @@ export default function PostsPage({posts}: InferGetServerSidePropsType<typeof ge
   )
 }
 
-function SearchForm() {
-  const query = ""
-  const userId = ""
+function SearchForm({
+  users,
+  query,
+  userId,
+}: {
+  query: string
+  userId: string
+  users: InferGetServerSidePropsType<typeof getServerSideProps>["users"]
+}) {
   const queryRef = useRef<HTMLInputElement>(null)
   const userRef = useRef<HTMLSelectElement>(null)
+  const [isFiltering, setIsFiltering] = useState(false)
+  const router = useRouter()
 
-  const users: any[] = []
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+
+    setIsFiltering(true)
+    router
+      .push({
+        query: {
+          ...router.query,
+          query: queryRef.current?.value,
+          userId: userRef.current?.value,
+        },
+      })
+      .then(() => {
+        setIsFiltering(false)
+      })
+  }
 
   return (
-    <form className="mb-4 form">
+    <form onSubmit={handleSubmit} className="mb-4 form">
       <div className="form-row">
         <FormGroup>
           <label htmlFor="query">Query</label>
@@ -62,14 +90,29 @@ function SearchForm() {
             ))}
           </select>
         </FormGroup>
-        <button className="btn">Filter</button>
+        <button disabled={isFiltering} className="btn">
+          {isFiltering ? "Filtering" : "Filter"}
+        </button>
       </div>
     </form>
   )
 }
 
-export const getServerSideProps = (async () => {
-  const posts = await getPosts()
+export const getServerSideProps = (async ({ query: searchParams }) => {
+  const query = searchParams.query as string
+  const userId = searchParams.userId as string
 
-  return { props: { posts } }
+  const [posts, users] = await Promise.all([
+    getPosts({ query, userId }),
+    getUsers(),
+  ])
+
+  return {
+    props: {
+      query: query || "",
+      userId: userId || "",
+      posts,
+      users,
+    },
+  }
 }) satisfies GetServerSideProps
